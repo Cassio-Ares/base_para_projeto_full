@@ -1,8 +1,10 @@
-const conn = '';
+import knex from 'knex';
+import knexConfig from '../config/database.js'
+let conn;
 
 const knexService = () =>{
     if(!conn){
-        conn = '';
+        conn = knex(knexConfig);
     }
 
     return conn;

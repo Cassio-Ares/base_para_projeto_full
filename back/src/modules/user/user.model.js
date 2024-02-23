@@ -1,4 +1,5 @@
 import knex from "../../services/knex.js";
+import bcrypt from "bcrypt"
 
 export const getAll = () => {
   return knex("users");
@@ -9,11 +10,12 @@ export const get = (id) => {
 };
 
 export const save = (params) => {
+  params.password = bcrypt.hashSync(params.password, 10)
   return knex("users").insert(params);
 };
 
 export const remove = (id) => {
-  return knex("users").delete(id);
+  return knex("users").where({id}).delete();
 };
 
 export const update = (id, params) => {
