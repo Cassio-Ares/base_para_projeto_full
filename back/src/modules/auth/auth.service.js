@@ -7,13 +7,13 @@ export const login = async (params) =>{
     const user = await getByEmail(params.email)
 
     if(!user){
-        return { error: "E-mail ou senha invalido"}
+        return { error: "E-mail ou senha inválido"}
     };
 
     const passwordOk = bcrypt.compareSync(params.password, user.password);
 
     if(!passwordOk){
-        return { error: "E-mail ou senha invalido"}
+        return { error: "E-mail ou senha inválido"}
     };
 
     const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '1d'} );

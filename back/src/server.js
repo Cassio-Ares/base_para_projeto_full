@@ -3,10 +3,14 @@ import dotenv from "dotenv";
 import cors from "cors";
  dotenv.config();
 
+import bearerToken from 'express-bearer-token'
+
+
 import userRouter from "./modules/user/user.route.js";
 import authRouter from "./modules/auth/auth.route.js"
 
 const app = express();
+app.use(bearerToken());
 app.use(express.json());
 app.use(cors());
 

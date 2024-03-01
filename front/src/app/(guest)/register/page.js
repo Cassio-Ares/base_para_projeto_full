@@ -1,8 +1,13 @@
+'use client'
 import RegisterForm from "@/components/RegisterForm";
+import * as S from './style.jsx'
 
 export  const RegisterPage = () =>{
-    return <div><RegisterForm/></div>
-};
+    return (
+    <S.RegisterWrapper>
+        <RegisterForm/>
+    </S.RegisterWrapper>
+)};
 
 
 export default RegisterPage;
