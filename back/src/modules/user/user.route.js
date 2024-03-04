@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getAll, get, save, update, remove, getMe  } from './index.js';
+import authMiddleware from "../../middleware/authMiddleare.js";
 
 
 const router = Router();
@@ -9,12 +10,8 @@ router.get('/', async (req, res) => {
     res.status(200).json({data});
 });
 
-router.get('/me', async (req, res) => {
-    const data = await getMe(req.token);
-    if(data.error){
-        return res.status(403).json({error: data.error});
-    }
-    res.status(200).json({data});
+router.get('/me', authMiddleware, async (req, res) => {
+      res.status(200).json({data: req.user});
 })
 
 router.get('/:id', async (req, res) => {
