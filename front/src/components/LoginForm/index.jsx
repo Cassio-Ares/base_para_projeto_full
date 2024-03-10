@@ -3,15 +3,27 @@
 import * as S from "./style.jsx";
 import { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const [ notification, setNotification] = useState({
+  const router = useRouter()
+
+  const[showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+
+  const [notification, setNotification] = useState({
     open: false,
-    message: '',
-    severity: '',
+    message: "",
+    severity: "",
   });
 
   const onChangeValue = (e) => {
@@ -31,29 +43,36 @@ const LoginForm = () => {
       setNotification({
         open: true,
         message: `Bem-vindo usuario do e-mail ${email}`,
-        severity: "success"
+        severity: "success",
       });
+      router.push('/dashboard')
     } catch (error) {
       setNotification({
         open: true,
         message: error.response.data.error,
-        severity: "error"
+        severity: "error",
       });
     }
   };
 
-  const handleClose = () =>{
+  const handleClose = () => {
     setNotification({
       open: false,
-      message: '',
-      severity: '',
+      message: "",
+      severity: "",
     });
-  }
+  };
 
   return (
     <>
       <S.Form>
-        <S.H1>Login Form</S.H1>
+        <S.Typography
+          variant="h1"
+          color="primary"
+          style={{ marginBottom: "64px" }}
+        >
+          YOURfinance.IO
+        </S.Typography>
         <S.TextField
           type="email"
           name="email"
@@ -63,25 +82,47 @@ const LoginForm = () => {
           onChange={onChangeValue}
           fullWidth
         />
-        <S.TextField
-          type="password"
-          name="password"
-          label="Digite sua senha"
-          variant="outlined"
-          color="primary"
-          onChange={onChangeValue}
-          fullWidth
-        />
+         <S.FormControl  variant="outlined"  fullWidth>
+          <S.InputLabel htmlFor="Digite sua senha">
+          "Digite sua senha"
+          </S.InputLabel>
+          <S.OutlinedInput
+            id="outlined-adornment-password"
+             name="password"
+            onChange={onChangeValue}
+            type={showPassword ? "text" : "password"}
+            endAdornment={
+              <S.InputAdornment position="end">
+                <S.IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <S.VisibilityOff /> : <S.Visibility />}
+                </S.IconButton>
+              </S.InputAdornment>
+            }
+            label="Password"
+          />
+        </S.FormControl>
         <S.Button
           onClick={onSubmit}
           type="submit"
-          variant="outlined"
-          color="success"
+          variant="contained"
+          color="primary"
+          fullWidth
         >
-          Enviar
+          Login
         </S.Button>
+        <S.Link href="/register">Criar conta</S.Link>
       </S.Form>
-      <S.Snackbar open={notification.open} autoHideDuration={6000} onClose={handleClose}>
+
+      <S.Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
         <S.Alert variant="filled" severity={notification.severity}>
           {notification.message}
         </S.Alert>
