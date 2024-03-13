@@ -8,14 +8,21 @@ import FormControlMUI from '@mui/material/FormControl'
 import InputLabelMUI from  '@mui/material/InputLabel'  
 import SelectMUI from '@mui/material/Select'
 import MenuItemMUI from '@mui/material/MenuItem'
- 
+import TypographyMUI from '@mui/material/Typography'
 
 
-export const H1 = styled.h1``
+export const Typography = styled(TypographyMUI)``
 
 export const Button = styled(ButtonMUI)``
 
-export const Form = styled.form``
+export const Form = styled.form`
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+margin-top:5px;
+gap:15px;
+`
 
 export const TextField = styled(TextFieldMUI)``
 

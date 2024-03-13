@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import * as S from "./style.jsx";
 import axios from "axios";
 
@@ -9,10 +9,44 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
+import { NumericFormat } from "react-number-format";
+
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { formatISO } from "date-fns";
+import { ptBR } from 'date-fns/locale'
+
+const NumericFormatCustom = forwardRef(function NumericFormatCustom(
+  props,
+  ref
+) {
+  const { onChange, ...other } = props;
+
+  return (
+    <NumericFormat
+      {...other}
+      getInputRef={ref}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      thousandSeparator="."
+      decimalSeparator=","
+      valueIsNumericString
+      prefix="R$ "
+    />
+  );
+});
+
 export const MetaCreate = ({ openModal, closeModal }) => {
   const [descricao, setDescricao] = useState();
   const [valor, setValor] = useState();
-  const [dataMeta, setDataMeta] = useState();
+  const [dataMeta, setDataMeta] = useState( new Date());
   const [open, setOpen] = useState(false);
 
   const [notification, setNotification] = useState({
@@ -25,14 +59,14 @@ export const MetaCreate = ({ openModal, closeModal }) => {
     const { name, value } = e.target;
     if (name === "descricao") setDescricao(value);
     if (name === "valor") setValor(value);
-    if (name === "dataMeta") setDataMeta(value);
+    //if (name === "dataMeta") setDataMeta(value);
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     // try {
     //   const response = await axios.get("http://localhost:8080/metas", {
-    //     descricao, valor, data: dataMeta
+    //     descricao, valor: valor * 100, data: formatISO(dataMeta, { representation: 'date', locale: ptBR})
     //   });
     //   localStorage.getItem("token", response.data.data.token);
     //   setNotification({
@@ -86,13 +120,13 @@ export const MetaCreate = ({ openModal, closeModal }) => {
 
       <Dialog open={open} onClose={handleCloseModal}>
         <DialogTitle>
-        <S.Typography
-          variant="h1"
-          color="primary"
-          style={{ marginBottom: "25px" }}
-        >
-         Criar meta
-        </S.Typography>
+          <S.Typography
+            variant="h1"
+            color="primary"
+            style={{ marginBottom: "25px" }}
+          >
+            Criar meta
+          </S.Typography>
         </DialogTitle>
         <DialogContent>
           <S.Form>
@@ -106,23 +140,25 @@ export const MetaCreate = ({ openModal, closeModal }) => {
               fullWidth
             />
             <S.TextField
-              type="text"
-              name="valor"
               label="Cadastre uma valor"
-              variant="outlined"
-              color="primary"
               onChange={onChangeValue}
+              name="valor"
+              id="formatted-numberformat-input"
+              InputProps={{
+                inputComponent: NumericFormatCustom,
+              }}
+              variant="outlined"
               fullWidth
             />
-            <S.TextField
-              type="text"
-              name="dataMeta"
-              label="Cadastre a data da para meta"
-              variant="outlined"
-              color="primary"
-              onChange={onChangeValue}
-              fullWidth
-            />
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ ptBR }>
+              <DatePicker
+                name="dataMeta"
+                variant="outlined"
+                //value={ dataMeta}
+                onChange={(newValue) => setDataMeta(newValue)}
+                fullWidth
+              />
+            </LocalizationProvider>
           </S.Form>
         </DialogContent>
         <DialogActions
