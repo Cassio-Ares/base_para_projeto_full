@@ -1,35 +1,32 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { save, getByEmail } from '../user/index.js'
+import { save, getByEmail } from '../user/index.js';
 
+export const login = async (params) => {
+  const user = await getByEmail(params.email);
 
-export const login = async (params) =>{
-    const user = await getByEmail(params.email)
+  if (!user) {
+    return { error: 'E-mail ou senha inválidos' };
+  }
 
-    if(!user){
-        return { error: "E-mail ou senha inválido"}
-    };
+  const passwordCorrect = bcrypt.compareSync(params.password, user.password);
+  if (!passwordCorrect) {
+    return { error: 'E-mail ou senha inválidos' };
+  }
 
-    const passwordOk = bcrypt.compareSync(params.password, user.password);
-
-    if(!passwordOk){
-        return { error: "E-mail ou senha inválido"}
-    };
-
-    const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '1d'} );
-
-    return { token }
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+  return { token };
 };
 
 export const register = async (params) => {
-    const user = await getByEmail(params.email);
+  const user = await getByEmail(params.email);
 
-    if(user){
-        return { error: "E-mail já esta cadastrado"}
-    };
-    
-    const userCreated = await save(params);
-    
-    const token = jwt.sign({id: userCreated[0]}, process.env.JWT_SECRET, {expiresIn: '1d'})
-    return {token}
+  if (user) {
+    return { error: 'Este e-mail já está cadastrado' };
+  }
+
+  const userCreated = await save(params);
+
+  const token = jwt.sign({ id: userCreated[0] }, process.env.JWT_SECRET);
+  return { token };
 };

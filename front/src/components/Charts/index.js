@@ -19,24 +19,6 @@ export const Chart = () => {
       },
     },
   };
-  // const dataset = [
-  //   {
-  //     Receita: 1200000,
-  //     Despesa: 600000,
-  //     Ano: "2020",
-  //   },
-  //   {
-  //     Receita: 15900000,
-  //     Despesa: 900000,
-  //     Ano: "2021",
-  //   },
-
-  //   {
-  //     Receita: 59100000,
-  //     Despesa: 1200000,
-  //     Ano: "2022",
-  //   },
-  // ];
 
   const valueFormatter = (value) => `${value / 100}R$`;
 

@@ -1,12 +1,12 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 export const getMe = async (token) => {
   try {
-    const dataToken = jwt.verify(token, process.env.JWT_SECRET);
-    return dataToken;
+    const isValid = jwt.verify(token, process.env.JWT_SECRET);
+    return isValid;
   } catch (error) {
     return {
-      error: "Token inválido",
+      error: 'Token inválido',
     };
   }
 };

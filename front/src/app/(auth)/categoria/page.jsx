@@ -2,7 +2,7 @@
 
 export const CategoriaPage = () =>{
     return(
-        <h1>Categoria</h1>
+        <h1 style={{marginTop: '12px'}}>Categoria</h1>
     )
 }
 
